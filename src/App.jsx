@@ -1,0 +1,1256 @@
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Github, Linkedin, Mail, Download, ArrowRight, ArrowLeft, ArrowUpRight,
+  Moon, Sun, Menu, X, MapPin, CircleCheck, Layers, Database, Wrench,
+  Sparkles, Monitor, Award, ExternalLink, FolderGit2,
+} from "lucide-react";
+
+/* ============================================================
+   DATOS DEL PORTAFOLIO — edita todo desde aquí.
+   Nada más abajo necesita tocarse para cambiar contenido.
+   ============================================================ */
+
+const DATOS = {
+  nombre: "Alexys Cavero",
+  titulo: "Desarrollador Web Junior · Automatización e IA · Estudiante de Ingeniería de Sistemas",
+  descripcion:
+    "Construyo soluciones web modernas que resuelven problemas reales: plataformas para negocios, automatización con inteligencia artificial y aplicaciones que ya están en producción.",
+  ubicacion: "Ica, Perú",
+  disponible: "Disponible para oportunidades",
+  email: "contacto@ejemplo.com",            // ← reemplazar
+  github: "https://github.com/usuario",     // ← reemplazar
+  linkedin: "https://linkedin.com/in/usuario", // ← reemplazar
+  cvUrl: "#",                                // ← reemplazar con la ruta real del CV (ej. /cv-alexys-cavero.pdf)
+
+  indicadores: [
+    { valor: "4+", etiqueta: "proyectos en producción real" },
+    { valor: "12+", etiqueta: "tecnologías en uso activo" },
+    { valor: "100%", etiqueta: "proyectos nacidos de necesidades reales" },
+  ],
+
+  sobreMi: {
+    intro:
+      "No colecciono tutoriales: construyo software que la gente usa. Cofundé Conecta Systems, una consultora de desarrollo web en Ica, y combino la universidad con proyectos reales para clientes, negocios locales y campañas sociales.",
+    puntos: [
+      {
+        titulo: "Desarrollo web end-to-end",
+        texto: "Frontend con React, Vite y Tailwind; backend con Java Spring Boot, Node y Supabase. Despliegue continuo en Netlify.",
+      },
+      {
+        titulo: "Automatización con IA",
+        texto: "Integro Claude, GPT y Gemini en flujos reales: generación automática de contenido, funciones programadas y asistentes para negocios.",
+      },
+      {
+        titulo: "Resolución de problemas",
+        texto: "Cada proyecto parte de una necesidad concreta: una ruta de ventas, una campaña benéfica, una academia. Primero el problema, después el código.",
+      },
+      {
+        titulo: "Aprendizaje continuo",
+        texto: "Estudiante de Ingeniería de Sistemas (UTP) con práctica constante leyendo y escribiendo código de nivel producción.",
+      },
+    ],
+  },
+
+  tecnologias: [
+    {
+      categoria: "Frontend",
+      icono: "monitor",
+      descripcion: "Interfaces rápidas, accesibles y mantenibles.",
+      items: [
+        { nombre: "React", detalle: "Componentización y estado predecible en SPAs reales." },
+        { nombre: "Tailwind CSS", detalle: "Diseño consistente sin CSS muerto ni hojas gigantes." },
+        { nombre: "Vite", detalle: "Builds instantáneos y DX moderna en todos mis proyectos." },
+        { nombre: "TypeScript", detalle: "Tipado para detectar errores antes de llegar al usuario." },
+      ],
+    },
+    {
+      categoria: "Backend",
+      icono: "layers",
+      descripcion: "APIs y lógica de negocio sólidas.",
+      items: [
+        { nombre: "Java · Spring Boot", detalle: "Microservicios y lógica empresarial en entorno financiero real." },
+        { nombre: "Node.js", detalle: "Funciones serverless y automatizaciones programadas." },
+        { nombre: "APIs REST", detalle: "Diseño de contratos claros entre frontend y backend." },
+      ],
+    },
+    {
+      categoria: "Base de datos",
+      icono: "database",
+      descripcion: "Modelado y consultas pensadas para crecer.",
+      items: [
+        { nombre: "SQL Server", detalle: "Procedimientos almacenados y trazabilidad en sistemas empresariales." },
+        { nombre: "PostgreSQL · Supabase", detalle: "Backend-as-a-service con auth y realtime para productos ágiles." },
+        { nombre: "MySQL", detalle: "Diseño relacional y normalización desde cero." },
+      ],
+    },
+    {
+      categoria: "Herramientas",
+      icono: "wrench",
+      descripcion: "Flujo de trabajo profesional de punta a punta.",
+      items: [
+        { nombre: "Git · GitHub", detalle: "Control de versiones y trabajo colaborativo." },
+        { nombre: "Netlify", detalle: "CI/CD, funciones serverless y Blobs en producción." },
+        { nombre: "Docker", detalle: "Entornos reproducibles para desarrollo y despliegue." },
+        { nombre: "Power BI", detalle: "Dashboards y modelado estrella para inteligencia de negocio." },
+      ],
+    },
+    {
+      categoria: "IA y Automatización",
+      icono: "sparkles",
+      descripcion: "La IA como multiplicador, no como adorno.",
+      items: [
+        { nombre: "Claude", detalle: "Par de programación y motor de generación de documentos y código." },
+        { nombre: "GPT · Gemini", detalle: "Pipelines de contenido automatizado vía API en producción." },
+        { nombre: "NotebookLM", detalle: "Investigación y síntesis de documentación técnica." },
+        { nombre: "n8n", detalle: "Orquestación de flujos sin reinventar integraciones." },
+      ],
+    },
+  ],
+
+  // CERTIFICADOS — contenido simulado, reemplazar con los reales.
+  certificados: [
+    {
+      codigo: "CERT-01",
+      nombre: "Desarrollo Web Full Stack",
+      institucion: "Institución de ejemplo",
+      fecha: "2025",
+      descripcion: "Certificación en construcción de aplicaciones web modernas con React y Node.js. (Placeholder)",
+    },
+    {
+      codigo: "CERT-02",
+      nombre: "Bases de Datos con SQL Server",
+      institucion: "Institución de ejemplo",
+      fecha: "2025",
+      descripcion: "Diseño, consultas avanzadas y procedimientos almacenados. (Placeholder)",
+    },
+    {
+      codigo: "CERT-03",
+      nombre: "Inteligencia Artificial Aplicada",
+      institucion: "Institución de ejemplo",
+      fecha: "2024",
+      descripcion: "Integración de modelos de lenguaje en productos reales. (Placeholder)",
+    },
+    {
+      codigo: "CERT-04",
+      nombre: "Scrum Foundation",
+      institucion: "Institución de ejemplo",
+      fecha: "2024",
+      descripcion: "Fundamentos de gestión ágil de proyectos de software. (Placeholder)",
+    },
+  ],
+
+  /* PROYECTOS
+     categoria: "implementado" | "negocio" | "personal"
+     Los enlaces demo/repo son placeholders. */
+  proyectos: [
+    {
+      id: "memorias-de-noel",
+      codigo: "PRJ-01",
+      categoria: "implementado",
+      nombre: "Memorias de Noel",
+      corto: "Plataforma web para una campaña benéfica navideña con muro interactivo de notas y gestión de voluntarios.",
+      problema: "La campaña coordinaba donaciones y voluntarios por WhatsApp, sin orden ni visibilidad.",
+      resultado: "Usada en una campaña real: centralizó inscripciones y dio identidad pública al proyecto.",
+      stack: ["React", "Supabase", "Netlify", "Tailwind"],
+      gradiente: ["#7F1D1D", "#B45309"],
+      detalle: {
+        resumen:
+          "Aplicación web para una campaña navideña de caridad: un muro estilo corcho donde los participantes dejan notas, más un flujo de registro de voluntarios. Diseñada, construida y desplegada en producción para una campaña real.",
+        problemaLargo:
+          "La organización gestionaba todo por mensajes sueltos: no había un lugar único para inscribirse como voluntario, registrar aportes ni mostrar el avance de la campaña al público.",
+        solucion:
+          "Una SPA con un muro interactivo de notas adhesivas (cada nota es un mensaje o compromiso), formulario de voluntarios con validación y panel de datos respaldado por Supabase. Despliegue automatizado en Netlify.",
+        arquitectura:
+          "Frontend React + Vite consumiendo Supabase como backend (PostgreSQL + API autogenerada). Sin servidor propio: la infraestructura serverless mantiene el costo en cero para la ONG.",
+        stackDetalle: {
+          frontend: ["React + Vite — SPA ligera de carga rápida", "Tailwind CSS — estética de corcho y notas con utilidades"],
+          backend: ["Supabase — auth, API REST y realtime sin backend propio"],
+          baseDatos: ["PostgreSQL (Supabase) — notas, voluntarios y aportes"],
+          herramientas: ["Netlify — despliegue continuo desde Git", "GitHub — control de versiones"],
+          ia: ["Claude — aceleración del desarrollo y revisión de código"],
+        },
+        decisiones: [
+          {
+            titulo: "Supabase en lugar de backend propio",
+            texto: "Para una ONG sin presupuesto, un backend dedicado era inviable. Supabase dio base de datos, API y seguridad por fila con costo cero y tiempo de desarrollo mínimo.",
+          },
+          {
+            titulo: "UI temática sin sacrificar usabilidad",
+            texto: "El muro de corcho aporta identidad, pero los flujos críticos (inscribirse, donar) se mantienen como formularios simples y directos.",
+          },
+        ],
+        impacto:
+          "La campaña tuvo por primera vez un canal digital propio: inscripciones ordenadas, visibilidad pública y una base reutilizable para futuras ediciones.",
+        demo: "#",
+        repo: "#",
+      },
+    },
+    {
+      id: "vistony-ruta-nazca",
+      codigo: "PRJ-02",
+      categoria: "implementado",
+      nombre: "Vistony · Ruta Nazca",
+      corto: "App móvil de ventas en campo con 286 clientes geocodificados, ruta optimizada por GPS y registro diario de avance.",
+      problema: "Un vendedor de lubricantes recorría su ruta sin mapa, sin orden de visitas y llevando las ventas en papel.",
+      resultado: "Usada a diario en campo: ruta ordenada por cercanía, catálogo digital y carga de ventas desde Excel.",
+      stack: ["JavaScript", "Leaflet", "Geolocalización", "Excel"],
+      gradiente: ["#0C4A6E", "#0E7490"],
+      detalle: {
+        resumen:
+          "Aplicación móvil (archivo único HTML, sin instalación) para un vendedor de lubricantes que cubre la ruta de Nazca: mapa con 286 clientes geocodificados, orden de visitas por GPS, catálogo de productos y seguimiento de avance diario.",
+        problemaLargo:
+          "El vendedor manejaba su cartera en cuadernos: direcciones imprecisas, visitas desordenadas que alargaban la jornada y cero trazabilidad de qué cliente compró qué.",
+        solucion:
+          "Una app que funciona offline-first en el celular: geocodifiqué los 286 clientes, ordené la ruta por proximidad GPS en tiempo real y agregué catálogo, marcado de visitas y carga de ventas históricas desde Excel.",
+        arquitectura:
+          "Un único archivo HTML con JavaScript vanilla: cero dependencias de servidor, funciona desde el sistema de archivos del teléfono. Leaflet para el mapa y la API de geolocalización del navegador para la posición en vivo.",
+        stackDetalle: {
+          frontend: ["HTML + JavaScript vanilla — máxima compatibilidad en gama media", "Leaflet — mapas interactivos open source"],
+          backend: ["Sin servidor — decisión deliberada por el contexto de uso"],
+          baseDatos: ["Datos embebidos + importación de Excel (SheetJS)"],
+          herramientas: ["Geocodificación de 286 direcciones reales", "API de Geolocalización del navegador"],
+          ia: ["Claude — limpieza y geocodificación masiva de la cartera de clientes"],
+        },
+        decisiones: [
+          {
+            titulo: "Archivo único en lugar de app instalable",
+            texto: "El usuario final no es técnico y la zona tiene conectividad irregular. Un HTML autocontenido elimina instalación, actualizaciones y dependencia de internet.",
+          },
+          {
+            titulo: "Orden de ruta por proximidad real",
+            texto: "En vez de una lista fija, la app reordena los clientes según la posición GPS actual: la jornada se adapta a dónde está el vendedor en cada momento.",
+          },
+        ],
+        impacto:
+          "Jornadas de venta más cortas y ordenadas, cartera de clientes digitalizada por primera vez y datos de venta listos para análisis.",
+        demo: "#",
+        repo: "#",
+      },
+    },
+    {
+      id: "academia-barnard",
+      codigo: "PRJ-03",
+      categoria: "implementado",
+      nombre: "Academia Barnard",
+      corto: "Sitio web institucional para una academia, desarrollado como proyecto cliente de Conecta Systems.",
+      problema: "La academia no tenía presencia digital: captaba alumnos solo por recomendación y volantes.",
+      resultado: "Proyecto entregado y facturado a cliente real; primer canal digital de captación de la academia.",
+      stack: ["React", "Tailwind", "Netlify"],
+      gradiente: ["#1E3A8A", "#3730A3"],
+      detalle: {
+        resumen:
+          "Sitio institucional para una academia: oferta académica, horarios, docentes y canal de contacto directo. Uno de los primeros proyectos comerciales de Conecta Systems, entregado a un cliente real.",
+        problemaLargo:
+          "La academia dependía del boca a boca. Los padres no tenían dónde verificar horarios, precios ni metodología, y la competencia con presencia web captaba a los alumnos que buscaban en Google.",
+        solucion:
+          "Un sitio rápido y claro, pensado para el padre de familia que decide en minutos: propuesta de valor visible de inmediato, información académica organizada y botón de contacto por WhatsApp en todo momento.",
+        arquitectura:
+          "SPA en React con contenido estructurado en datos (fácil de actualizar sin tocar componentes), desplegada en Netlify con dominio propio.",
+        stackDetalle: {
+          frontend: ["React + Vite — base mantenible para futuras secciones", "Tailwind CSS — sistema visual consistente"],
+          backend: ["Estático — sin necesidades dinámicas en esta fase"],
+          baseDatos: ["No aplica — contenido gestionado como datos del proyecto"],
+          herramientas: ["Netlify — hosting y despliegue continuo", "Git — versionado del proyecto"],
+          ia: ["Claude — prototipado rápido de secciones y copywriting"],
+        },
+        decisiones: [
+          {
+            titulo: "Contenido como datos, no hardcodeado",
+            texto: "Horarios y cursos viven en objetos de datos separados de la UI: el mantenimiento posterior no requiere entender React a fondo.",
+          },
+          {
+            titulo: "WhatsApp como conversión principal",
+            texto: "En el mercado local, los padres no llenan formularios: escriben. El CTA principal abre una conversación directa, no un formulario que nadie responde.",
+          },
+        ],
+        impacto:
+          "Primer proyecto facturado de Conecta Systems y primera presencia digital de la academia, con un canal de captación medible.",
+        demo: "#",
+        repo: "#",
+      },
+    },
+    {
+      id: "academia-lubricantes",
+      codigo: "PRJ-04",
+      categoria: "negocio",
+      nombre: "Mini-academia de Lubricantes",
+      corto: "Plataforma educativa para capacitar vendedores de lubricantes: lecciones, progreso y evaluaciones.",
+      problema: "Capacitar vendedores nuevos dependía de que alguien con experiencia tuviera tiempo de enseñarles.",
+      resultado: "Plataforma desplegada en Netlify con contenido estructurado por niveles y seguimiento de progreso.",
+      stack: ["React", "Vite", "Tailwind"],
+      gradiente: ["#14532D", "#15803D"],
+      detalle: {
+        resumen:
+          "Plataforma de microaprendizaje para el área comercial de lubricantes: lecciones cortas sobre productos y técnicas de venta, con progreso persistente y evaluaciones por módulo.",
+        problemaLargo:
+          "El conocimiento del producto vivía en la cabeza de los vendedores antiguos. Cada incorporación nueva implicaba semanas de acompañamiento informal y errores frente al cliente.",
+        solucion:
+          "Convertí el conocimiento del negocio en módulos estructurados: qué producto recomendar según el vehículo, objeciones frecuentes y práctica con evaluaciones. El vendedor avanza a su ritmo desde el celular.",
+        arquitectura:
+          "SPA React + Vite con persistencia local del progreso (sin necesidad de cuentas en la fase inicial), desplegada en Netlify para acceso inmediato desde cualquier dispositivo.",
+        stackDetalle: {
+          frontend: ["React + Vite — navegación instantánea entre lecciones", "Tailwind CSS — UI clara optimizada para móvil"],
+          backend: ["Sin backend en fase 1 — reduce fricción y costo"],
+          baseDatos: ["Persistencia local del progreso del alumno"],
+          herramientas: ["Netlify — despliegue y acceso por URL simple"],
+          ia: ["Claude — estructuración pedagógica del contenido técnico"],
+        },
+        decisiones: [
+          {
+            titulo: "Sin login en la primera fase",
+            texto: "Pedir cuentas a vendedores de campo mata la adopción. El progreso se guarda en el dispositivo; la autenticación queda para cuando el volumen lo justifique.",
+          },
+          {
+            titulo: "Lecciones de 3 minutos",
+            texto: "El contenido está fragmentado para consumirse entre visitas a clientes, no en sesiones largas que nadie completa.",
+          },
+        ],
+        impacto:
+          "El conocimiento comercial dejó de depender de personas específicas: ahora es un activo digital del negocio, reutilizable con cada incorporación.",
+        demo: "#",
+        repo: "#",
+      },
+    },
+    {
+      id: "aiverse-os",
+      codigo: "PRJ-05",
+      categoria: "personal",
+      nombre: "AIVERSE OS",
+      corto: "Dashboard personal con IA: noticias generadas automáticamente con Gemini, funciones programadas y reportes PDF.",
+      problema: "Mantenerse al día en tecnología exigía revisar decenas de fuentes manualmente cada día.",
+      resultado: "Sistema autónomo en producción: cada mañana genera y almacena un resumen de noticias sin intervención.",
+      stack: ["React", "Netlify Functions", "Gemini API", "Netlify Blobs"],
+      gradiente: ["#312E81", "#6D28D9"],
+      detalle: {
+        resumen:
+          "Sistema operativo personal en el navegador: un dashboard que centraliza noticias tecnológicas generadas por IA, documentos descargables y herramientas propias. El módulo central es un pipeline autónomo de noticias con Gemini.",
+        problemaLargo:
+          "Quería un resumen diario de noticias tecnológicas relevantes sin pagar suscripciones ni revisar fuentes a mano, y que el sistema funcionara solo, incluso sin abrir la aplicación.",
+        solucion:
+          "Una Netlify Function programada (cron) invoca la API de Gemini cada mañana, genera el resumen del día y lo persiste en Netlify Blobs. El frontend solo lee contenido ya generado: carga instantánea y costo de API mínimo.",
+        arquitectura:
+          "Tres capas desacopladas: frontend React (lectura), funciones serverless programadas (generación) y Netlify Blobs (almacenamiento). El frontend nunca llama a la IA directamente.",
+        stackDetalle: {
+          frontend: ["React + Vite — dashboard modular por widgets", "Tailwind CSS — tema oscuro tipo sistema operativo"],
+          backend: ["Netlify Functions — generación programada sin servidor propio", "Scheduled Functions (cron) — ejecución diaria autónoma"],
+          baseDatos: ["Netlify Blobs — almacenamiento clave-valor de los resúmenes generados"],
+          herramientas: ["Netlify — plataforma única para todo el ciclo", "GitHub — despliegue continuo"],
+          ia: ["Gemini API — generación del contenido de noticias", "Claude — diseño de la arquitectura del pipeline"],
+        },
+        decisiones: [
+          {
+            titulo: "Generación programada, no bajo demanda",
+            texto: "Llamar a la IA en cada visita sería lento y caro. Generar una vez al día y servir desde Blobs da latencia de milisegundos y costo casi cero.",
+          },
+          {
+            titulo: "Desacoplar lectura de generación",
+            texto: "Si la API de Gemini falla, el dashboard sigue mostrando el último contenido válido: el fallo de un proveedor externo no rompe la experiencia.",
+          },
+        ],
+        impacto:
+          "Un sistema de información personal totalmente autónomo, y el aprendizaje práctico de arquitecturas serverless con jobs programados, aplicable directamente a proyectos de clientes.",
+        demo: "#",
+        repo: "#",
+      },
+    },
+    {
+      id: "panel-hipico",
+      codigo: "PRJ-06",
+      categoria: "personal",
+      nombre: "Panel de Análisis Hípico",
+      corto: "Herramienta de análisis de carreras de caballos: estadísticas históricas y comparación de rendimiento.",
+      problema: "Analizar carreras implicaba cruzar datos dispersos a mano antes de cada jornada.",
+      resultado: "Herramienta de uso real que ordena la información y reduce el análisis previo de horas a minutos.",
+      stack: ["React", "Vite", "Visualización de datos"],
+      gradiente: ["#7C2D12", "#A16207"],
+      detalle: {
+        resumen:
+          "Aplicación web construida para un usuario real (un familiar aficionado a la hípica) que centraliza estadísticas de caballos, jinetes y resultados históricos para analizar carreras con datos en lugar de intuición.",
+        problemaLargo:
+          "El análisis previo a cada jornada era artesanal: apuntes en papel, memoria y planillas sueltas. Información valiosa se perdía y comparar rendimiento entre jornadas era casi imposible.",
+        solucion:
+          "Un panel que estructura el historial por caballo y jinete, calcula métricas de rendimiento y permite comparar participantes de una carrera lado a lado antes de decidir.",
+        arquitectura:
+          "SPA React con capa de datos normalizada (caballos, jinetes, carreras, resultados) y componentes de visualización reutilizables para las comparativas.",
+        stackDetalle: {
+          frontend: ["React + Vite — interacción fluida con tablas y filtros", "Visualización de datos — comparativas gráficas de rendimiento"],
+          backend: ["Sin backend — datos gestionados localmente en esta fase"],
+          baseDatos: ["Modelo de datos normalizado en el cliente"],
+          herramientas: ["Netlify — acceso desde cualquier dispositivo"],
+          ia: ["Claude — diseño del modelo de datos del dominio hípico"],
+        },
+        decisiones: [
+          {
+            titulo: "Modelar el dominio antes que la UI",
+            texto: "El valor está en las relaciones caballo-jinete-carrera. Definir bien ese modelo primero hizo que las vistas comparativas fueran triviales de construir.",
+          },
+          {
+            titulo: "Construir para un usuario real",
+            texto: "Cada iteración se validó con el usuario final. Funcionalidades que parecían obvias se descartaron porque no las usaba; otras nacieron de verlo trabajar.",
+          },
+        ],
+        impacto:
+          "Práctica real de levantamiento de requerimientos con un usuario no técnico y de modelado de un dominio de datos complejo desde cero.",
+        demo: "#",
+        repo: "#",
+      },
+    },
+  ],
+};
+
+const CATEGORIAS = [
+  { id: "implementado", titulo: "Proyectos implementados", nota: "Ya en uso por organizaciones, negocios o clientes reales." },
+  { id: "negocio", titulo: "Soluciones para empresas y negocios", nota: "Aplicaciones orientadas a resolver problemas operativos reales." },
+  { id: "personal", titulo: "Proyectos personales", nota: "Iniciativas propias para explorar y dominar nuevas tecnologías." },
+];
+
+/* ============================================================
+   SISTEMA DE TEMA (claro / oscuro)
+   Nota: la preferencia se mantiene en memoria dentro de este
+   entorno. Al desplegar el proyecto, persiste la elección con
+   localStorage dentro de un try/catch (ver comentario en App).
+   ============================================================ */
+
+const TEMAS = {
+  oscuro: {
+    nombre: "oscuro",
+    bg: "#0D1117", surface: "#151B23", surface2: "#1B232E",
+    border: "#27313F", borderSoft: "#1F2835",
+    text: "#E9ECF1", muted: "#9AA6B5", faint: "#677484",
+    accent: "#E8983E", accentText: "#F3B566",
+    accentSoft: "rgba(232, 152, 62, 0.12)",
+    ok: "#4ADE80",
+  },
+  claro: {
+    nombre: "claro",
+    bg: "#F7F6F2", surface: "#FFFFFF", surface2: "#EFEDE7",
+    border: "#DEDAD0", borderSoft: "#E8E5DD",
+    text: "#191C22", muted: "#5A6371", faint: "#8B94A3",
+    accent: "#B45309", accentText: "#B45309",
+    accentSoft: "rgba(180, 83, 9, 0.10)",
+    ok: "#15803D",
+  },
+};
+
+const MONO = 'ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace';
+const SANS = 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+
+/* ============================================================
+   HOOKS Y UTILIDADES
+   ============================================================ */
+
+// Revela elementos al entrar en viewport (respeta prefers-reduced-motion)
+function useReveal() {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { setVisible(true); return; }
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.12 }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+  return [ref, visible];
+}
+
+function Reveal({ children, delay = 0, className = "", style = {} }) {
+  const [ref, visible] = useReveal();
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        ...style,
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(18px)",
+        transition: `opacity 0.6s ease ${delay}ms, transform 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// Etiqueta monoespaciada estilo "ficha técnica" — firma visual del sitio
+function Eyebrow({ t, children }) {
+  return (
+    <div className="flex items-center gap-3 mb-4">
+      <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", color: t.accentText, textTransform: "uppercase" }}>
+        {children}
+      </span>
+      <span className="flex-1 h-px" style={{ background: t.borderSoft, maxWidth: 64 }} />
+    </div>
+  );
+}
+
+function Chip({ t, children }) {
+  return (
+    <span
+      className="inline-block px-2.5 py-1 rounded-md"
+      style={{ fontFamily: MONO, fontSize: 11, color: t.muted, background: t.surface2, border: `1px solid ${t.borderSoft}` }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function Boton({ t, primario, icono: Icono, children, href, onClick, descarga }) {
+  const base = "inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all duration-200";
+  const estilo = primario
+    ? { background: t.accent, color: "#14100A", boxShadow: `0 1px 0 rgba(0,0,0,0.1)` }
+    : { background: "transparent", color: t.text, border: `1px solid ${t.border}` };
+  const props = {
+    className: base + " hover:-translate-y-0.5",
+    style: estilo,
+    onClick,
+  };
+  if (href !== undefined) {
+    return (
+      <a href={href} {...props} {...(descarga ? { download: true } : {})} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
+        {Icono && <Icono size={16} strokeWidth={2} />}
+        {children}
+      </a>
+    );
+  }
+  return (
+    <button type="button" {...props}>
+      {Icono && <Icono size={16} strokeWidth={2} />}
+      {children}
+    </button>
+  );
+}
+
+/* ============================================================
+   NAVEGACIÓN
+   ============================================================ */
+
+const SECCIONES = [
+  { id: "inicio", label: "Inicio" },
+  { id: "sobre-mi", label: "Sobre mí" },
+  { id: "tecnologias", label: "Tecnologías" },
+  { id: "certificados", label: "Certificados" },
+  { id: "proyectos", label: "Proyectos" },
+  { id: "contacto", label: "Contacto" },
+];
+
+function Nav({ t, alternarTema, irASeccion, enDetalle, volver }) {
+  const [abierto, setAbierto] = useState(false);
+  const [conFondo, setConFondo] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setConFondo(window.scrollY > 12);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const click = (id) => { setAbierto(false); enDetalle ? volver(id) : irASeccion(id); };
+
+  return (
+    <header
+      className="fixed top-0 left-0 right-0 z-50"
+      style={{
+        background: conFondo || abierto ? (t.nombre === "oscuro" ? "rgba(13,17,23,0.85)" : "rgba(247,246,242,0.85)") : "transparent",
+        backdropFilter: conFondo || abierto ? "blur(12px)" : "none",
+        borderBottom: `1px solid ${conFondo || abierto ? t.borderSoft : "transparent"}`,
+        transition: "background 0.3s ease, border-color 0.3s ease",
+      }}
+    >
+      <nav className="max-w-5xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
+        <button type="button" onClick={() => click("inicio")} className="flex items-center gap-2.5" style={{ color: t.text }}>
+          <span
+            className="w-7 h-7 rounded-md flex items-center justify-center font-bold text-sm"
+            style={{ background: t.accent, color: "#14100A", fontFamily: MONO }}
+          >
+            A
+          </span>
+          <span className="font-semibold text-sm tracking-tight hidden sm:block">{DATOS.nombre}</span>
+        </button>
+
+        <div className="hidden md:flex items-center gap-1">
+          {SECCIONES.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => click(s.id)}
+              className="px-3 py-2 rounded-md text-sm transition-colors duration-200"
+              style={{ color: t.muted }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = t.text)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = t.muted)}
+            >
+              {s.label}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={alternarTema}
+            aria-label="Cambiar tema"
+            className="ml-2 w-9 h-9 rounded-lg flex items-center justify-center transition-colors"
+            style={{ border: `1px solid ${t.border}`, color: t.muted }}
+          >
+            {t.nombre === "oscuro" ? <Sun size={15} /> : <Moon size={15} />}
+          </button>
+        </div>
+
+        <div className="flex md:hidden items-center gap-2">
+          <button
+            type="button"
+            onClick={alternarTema}
+            aria-label="Cambiar tema"
+            className="w-9 h-9 rounded-lg flex items-center justify-center"
+            style={{ border: `1px solid ${t.border}`, color: t.muted }}
+          >
+            {t.nombre === "oscuro" ? <Sun size={15} /> : <Moon size={15} />}
+          </button>
+          <button
+            type="button"
+            onClick={() => setAbierto(!abierto)}
+            aria-label="Menú"
+            className="w-9 h-9 rounded-lg flex items-center justify-center"
+            style={{ border: `1px solid ${t.border}`, color: t.text }}
+          >
+            {abierto ? <X size={17} /> : <Menu size={17} />}
+          </button>
+        </div>
+      </nav>
+
+      {abierto && (
+        <div className="md:hidden px-5 pb-4 flex flex-col gap-1" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
+          {SECCIONES.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => click(s.id)}
+              className="text-left px-3 py-3 rounded-md text-sm font-medium"
+              style={{ color: t.text }}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </header>
+  );
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+function Hero({ t, irASeccion }) {
+  return (
+    <section id="inicio" className="pt-32 md:pt-40 pb-16 md:pb-20 px-5 md:px-8">
+      <div className="max-w-5xl mx-auto">
+        <Reveal>
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-7"
+            style={{ border: `1px solid ${t.border}`, background: t.surface }}
+          >
+            <span className="relative flex w-2 h-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: t.ok }} />
+              <span className="relative inline-flex rounded-full w-2 h-2" style={{ background: t.ok }} />
+            </span>
+            <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: t.muted }}>
+              {DATOS.disponible.toUpperCase()}
+            </span>
+          </div>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <h1
+            className="font-extrabold tracking-tight leading-[1.05] mb-5"
+            style={{ color: t.text, fontSize: "clamp(2.4rem, 6vw, 4.2rem)" }}
+          >
+            {DATOS.nombre}
+          </h1>
+        </Reveal>
+
+        <Reveal delay={140}>
+          <p style={{ fontFamily: MONO, fontSize: "clamp(0.78rem, 1.6vw, 0.95rem)", color: t.accentText, letterSpacing: "0.02em" }} className="mb-5">
+            {DATOS.titulo}
+          </p>
+        </Reveal>
+
+        <Reveal delay={200}>
+          <p className="text-base md:text-lg leading-relaxed max-w-2xl mb-9" style={{ color: t.muted }}>
+            {DATOS.descripcion}
+          </p>
+        </Reveal>
+
+        <Reveal delay={260}>
+          <div className="flex flex-wrap items-center gap-3 mb-12">
+            <Boton t={t} primario icono={Download} href={DATOS.cvUrl} descarga>Descargar CV</Boton>
+            <Boton t={t} icono={ArrowRight} onClick={() => irASeccion("proyectos")}>Ver proyectos</Boton>
+            <Boton t={t} icono={Github} href={DATOS.github}>GitHub</Boton>
+            <Boton t={t} icono={Linkedin} href={DATOS.linkedin}>LinkedIn</Boton>
+            <Boton t={t} icono={Mail} onClick={() => irASeccion("contacto")}>Contacto</Boton>
+          </div>
+        </Reveal>
+
+        <Reveal delay={320}>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-px rounded-xl overflow-hidden" style={{ background: t.borderSoft, border: `1px solid ${t.borderSoft}` }}>
+            {DATOS.indicadores.map((ind) => (
+              <div key={ind.etiqueta} className="p-5" style={{ background: t.surface }}>
+                <div className="text-2xl font-bold mb-1" style={{ color: t.text }}>{ind.valor}</div>
+                <div style={{ fontFamily: MONO, fontSize: 11, color: t.faint, letterSpacing: "0.04em" }}>{ind.etiqueta}</div>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   SOBRE MÍ
+   ============================================================ */
+
+function SobreMi({ t }) {
+  return (
+    <section id="sobre-mi" className="py-16 md:py-24 px-5 md:px-8">
+      <div className="max-w-5xl mx-auto">
+        <Reveal>
+          <Eyebrow t={t}>Sobre mí</Eyebrow>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4" style={{ color: t.text }}>
+            Software con propósito, no proyectos de práctica
+          </h2>
+          <p className="max-w-2xl leading-relaxed mb-10" style={{ color: t.muted }}>
+            {DATOS.sobreMi.intro}
+          </p>
+        </Reveal>
+        <div className="grid sm:grid-cols-2 gap-4">
+          {DATOS.sobreMi.puntos.map((p, i) => (
+            <Reveal key={p.titulo} delay={i * 70}>
+              <div
+                className="h-full p-5 rounded-xl transition-transform duration-200 hover:-translate-y-0.5"
+                style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <CircleCheck size={15} style={{ color: t.accentText }} />
+                  <h3 className="font-semibold text-sm" style={{ color: t.text }}>{p.titulo}</h3>
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: t.muted }}>{p.texto}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   TECNOLOGÍAS
+   ============================================================ */
+
+const ICONOS_CAT = { monitor: Monitor, layers: Layers, database: Database, wrench: Wrench, sparkles: Sparkles };
+
+function Tecnologias({ t }) {
+  return (
+    <section id="tecnologias" className="py-16 md:py-24 px-5 md:px-8" style={{ background: t.nombre === "oscuro" ? "rgba(255,255,255,0.015)" : "rgba(0,0,0,0.015)" }}>
+      <div className="max-w-5xl mx-auto">
+        <Reveal>
+          <Eyebrow t={t}>Stack tecnológico</Eyebrow>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4" style={{ color: t.text }}>
+            Herramientas elegidas con criterio
+          </h2>
+          <p className="max-w-2xl leading-relaxed mb-10" style={{ color: t.muted }}>
+            Cada tecnología de esta lista está en uso real en mis proyectos. No es una colección de logos: es el stack con el que entrego software.
+          </p>
+        </Reveal>
+        <div className="grid md:grid-cols-2 gap-4">
+          {DATOS.tecnologias.map((cat, i) => {
+            const Icono = ICONOS_CAT[cat.icono] || Layers;
+            return (
+              <Reveal key={cat.categoria} delay={i * 60} className={i === DATOS.tecnologias.length - 1 ? "md:col-span-2" : ""}>
+                <div className="h-full p-5 md:p-6 rounded-xl" style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}>
+                  <div className="flex items-center gap-3 mb-1.5">
+                    <span className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: t.accentSoft, color: t.accentText }}>
+                      <Icono size={16} />
+                    </span>
+                    <h3 className="font-semibold" style={{ color: t.text }}>{cat.categoria}</h3>
+                  </div>
+                  <p className="text-sm mb-4" style={{ color: t.faint }}>{cat.descripcion}</p>
+                  <div className="space-y-3">
+                    {cat.items.map((item) => (
+                      <div key={item.nombre} className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-3">
+                        <span className="shrink-0 sm:w-44" style={{ fontFamily: MONO, fontSize: 12.5, color: t.text }}>
+                          {item.nombre}
+                        </span>
+                        <span className="text-sm leading-snug" style={{ color: t.muted }}>{item.detalle}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   CERTIFICADOS
+   ============================================================ */
+
+function Certificados({ t }) {
+  const [activo, setActivo] = useState(null);
+  return (
+    <section id="certificados" className="py-16 md:py-24 px-5 md:px-8">
+      <div className="max-w-5xl mx-auto">
+        <Reveal>
+          <Eyebrow t={t}>Certificados</Eyebrow>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-10" style={{ color: t.text }}>
+            Formación que respalda la práctica
+          </h2>
+        </Reveal>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {DATOS.certificados.map((c, i) => (
+            <Reveal key={c.codigo} delay={i * 60}>
+              <button
+                type="button"
+                onClick={() => setActivo(c)}
+                className="w-full h-full text-left rounded-xl overflow-hidden transition-transform duration-200 hover:-translate-y-1"
+                style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
+              >
+                {/* Área de imagen del certificado (placeholder) */}
+                <div
+                  className="h-28 flex items-center justify-center"
+                  style={{ background: t.surface2, borderBottom: `1px solid ${t.borderSoft}` }}
+                >
+                  <div className="flex flex-col items-center gap-1.5" style={{ color: t.faint }}>
+                    <Award size={22} style={{ color: t.accentText }} />
+                    <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em" }}>{c.codigo}</span>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h3 className="font-semibold text-sm mb-1 leading-snug" style={{ color: t.text }}>{c.nombre}</h3>
+                  <p style={{ fontFamily: MONO, fontSize: 11, color: t.faint }} className="mb-2">
+                    {c.institucion} · {c.fecha}
+                  </p>
+                  <span className="text-xs font-medium inline-flex items-center gap-1" style={{ color: t.accentText }}>
+                    Ver detalle <ArrowUpRight size={12} />
+                  </span>
+                </div>
+              </button>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+
+      {/* Modal de certificado */}
+      {activo && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-5"
+          style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
+          onClick={() => setActivo(null)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl overflow-hidden"
+            style={{ background: t.surface, border: `1px solid ${t.border}` }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="h-44 flex items-center justify-center" style={{ background: t.surface2 }}>
+              <div className="flex flex-col items-center gap-2" style={{ color: t.faint }}>
+                <Award size={36} style={{ color: t.accentText }} />
+                <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em" }}>
+                  IMAGEN DEL CERTIFICADO · {activo.codigo}
+                </span>
+              </div>
+            </div>
+            <div className="p-6">
+              <h3 className="font-bold text-lg mb-1" style={{ color: t.text }}>{activo.nombre}</h3>
+              <p style={{ fontFamily: MONO, fontSize: 12, color: t.accentText }} className="mb-3">
+                {activo.institucion} · {activo.fecha}
+              </p>
+              <p className="text-sm leading-relaxed mb-5" style={{ color: t.muted }}>{activo.descripcion}</p>
+              <Boton t={t} onClick={() => setActivo(null)}>Cerrar</Boton>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
+/* ============================================================
+   PROYECTOS — la sección más importante
+   ============================================================ */
+
+function MiniaturaProyecto({ t, p, alta }) {
+  return (
+    <div
+      className={`relative overflow-hidden flex items-end ${alta ? "h-44 md:h-56" : "h-36"}`}
+      style={{ background: `linear-gradient(135deg, ${p.gradiente[0]}, ${p.gradiente[1]})` }}
+    >
+      {/* Cuadrícula técnica de fondo */}
+      <div
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.18) 1px, transparent 1px)",
+          backgroundSize: "26px 26px",
+        }}
+      />
+      <span
+        className="relative m-3 px-2 py-1 rounded"
+        style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", color: "rgba(255,255,255,0.92)", background: "rgba(0,0,0,0.35)" }}
+      >
+        {p.codigo} · {CATEGORIAS.find((c) => c.id === p.categoria)?.titulo.toUpperCase()}
+      </span>
+    </div>
+  );
+}
+
+function FilaDato({ t, etiqueta, children }) {
+  return (
+    <div className="flex gap-2.5 items-start">
+      <span className="shrink-0 mt-0.5 w-20" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.1em", color: t.accentText }}>
+        {etiqueta}
+      </span>
+      <p className="text-sm leading-snug" style={{ color: t.muted }}>{children}</p>
+    </div>
+  );
+}
+
+function TarjetaProyecto({ t, p, abrir, delay }) {
+  return (
+    <Reveal delay={delay}>
+      <button
+        type="button"
+        onClick={() => abrir(p.id)}
+        className="group w-full h-full text-left rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-1"
+        style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
+        onMouseEnter={(e) => (e.currentTarget.style.borderColor = t.accent)}
+        onMouseLeave={(e) => (e.currentTarget.style.borderColor = t.borderSoft)}
+      >
+        <MiniaturaProyecto t={t} p={p} />
+        <div className="p-5">
+          <h3 className="font-bold text-base mb-1.5" style={{ color: t.text }}>{p.nombre}</h3>
+          <p className="text-sm leading-relaxed mb-4" style={{ color: t.muted }}>{p.corto}</p>
+          <div className="space-y-2.5 mb-4 pb-4" style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
+            <FilaDato t={t} etiqueta="PROBLEMA">{p.problema}</FilaDato>
+            <FilaDato t={t} etiqueta="RESULTADO">{p.resultado}</FilaDato>
+          </div>
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {p.stack.map((s) => <Chip key={s} t={t}>{s}</Chip>)}
+          </div>
+          <span className="inline-flex items-center gap-1.5 text-sm font-medium transition-transform duration-200 group-hover:translate-x-0.5" style={{ color: t.accentText }}>
+            Ver caso completo <ArrowRight size={15} />
+          </span>
+        </div>
+      </button>
+    </Reveal>
+  );
+}
+
+function Proyectos({ t, abrir }) {
+  return (
+    <section id="proyectos" className="py-16 md:py-24 px-5 md:px-8" style={{ background: t.nombre === "oscuro" ? "rgba(255,255,255,0.015)" : "rgba(0,0,0,0.015)" }}>
+      <div className="max-w-5xl mx-auto">
+        <Reveal>
+          <Eyebrow t={t}>Proyectos</Eyebrow>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4" style={{ color: t.text }}>
+            Problemas reales, soluciones en producción
+          </h2>
+          <p className="max-w-2xl leading-relaxed mb-12" style={{ color: t.muted }}>
+            Cada proyecto incluye su caso completo: el problema, la solución, la arquitectura y las decisiones técnicas detrás.
+          </p>
+        </Reveal>
+
+        {CATEGORIAS.map((cat) => {
+          const lista = DATOS.proyectos.filter((p) => p.categoria === cat.id);
+          if (!lista.length) return null;
+          return (
+            <div key={cat.id} className="mb-14 last:mb-0">
+              <Reveal>
+                <div className="mb-5">
+                  <h3 className="font-semibold text-lg" style={{ color: t.text }}>{cat.titulo}</h3>
+                  <p className="text-sm" style={{ color: t.faint }}>{cat.nota}</p>
+                </div>
+              </Reveal>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {lista.map((p, i) => (
+                  <TarjetaProyecto key={p.id} t={t} p={p} abrir={abrir} delay={i * 70} />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   PÁGINA INDIVIDUAL DE PROYECTO
+   ============================================================ */
+
+const GRUPOS_STACK = [
+  ["frontend", "Frontend"],
+  ["backend", "Backend"],
+  ["baseDatos", "Base de datos"],
+  ["herramientas", "Herramientas"],
+  ["ia", "Inteligencia Artificial"],
+];
+
+function SeccionDetalle({ t, etiqueta, titulo, children }) {
+  return (
+    <Reveal className="mb-10">
+      <Eyebrow t={t}>{etiqueta}</Eyebrow>
+      {titulo && <h2 className="text-xl font-bold tracking-tight mb-3" style={{ color: t.text }}>{titulo}</h2>}
+      {children}
+    </Reveal>
+  );
+}
+
+function PaginaProyecto({ t, proyecto: p, volver }) {
+  const d = p.detalle;
+  return (
+    <main className="pt-24 pb-20 px-5 md:px-8">
+      <div className="max-w-3xl mx-auto">
+        <Reveal>
+          <button
+            type="button"
+            onClick={() => volver("proyectos")}
+            className="inline-flex items-center gap-2 text-sm font-medium mb-8 transition-transform duration-200 hover:-translate-x-0.5"
+            style={{ color: t.muted }}
+          >
+            <ArrowLeft size={15} /> Volver a proyectos
+          </button>
+        </Reveal>
+
+        <Reveal delay={60}>
+          <div className="rounded-xl overflow-hidden mb-8" style={{ border: `1px solid ${t.borderSoft}` }}>
+            <MiniaturaProyecto t={t} p={p} alta />
+          </div>
+        </Reveal>
+
+        <Reveal delay={100}>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-3" style={{ color: t.text }}>
+            {p.nombre}
+          </h1>
+          <div className="flex flex-wrap gap-1.5 mb-6">
+            {p.stack.map((s) => <Chip key={s} t={t}>{s}</Chip>)}
+          </div>
+          <div className="flex flex-wrap gap-3 mb-12">
+            <Boton t={t} primario icono={ExternalLink} href={d.demo}>Ver demo</Boton>
+            <Boton t={t} icono={FolderGit2} href={d.repo}>Código en GitHub</Boton>
+          </div>
+        </Reveal>
+
+        <SeccionDetalle t={t} etiqueta="Resumen ejecutivo">
+          <p className="leading-relaxed text-[15px]" style={{ color: t.muted }}>{d.resumen}</p>
+        </SeccionDetalle>
+
+        <SeccionDetalle t={t} etiqueta="Problema" titulo="¿Qué necesidad existía?">
+          <p className="leading-relaxed text-[15px]" style={{ color: t.muted }}>{d.problemaLargo}</p>
+        </SeccionDetalle>
+
+        <SeccionDetalle t={t} etiqueta="Solución" titulo="¿Cómo se resolvió?">
+          <p className="leading-relaxed text-[15px]" style={{ color: t.muted }}>{d.solucion}</p>
+        </SeccionDetalle>
+
+        <SeccionDetalle t={t} etiqueta="Arquitectura" titulo="Enfoque técnico">
+          <p className="leading-relaxed text-[15px]" style={{ color: t.muted }}>{d.arquitectura}</p>
+        </SeccionDetalle>
+
+        <SeccionDetalle t={t} etiqueta="Stack tecnológico">
+          <div className="rounded-xl overflow-hidden" style={{ border: `1px solid ${t.borderSoft}` }}>
+            {GRUPOS_STACK.map(([clave, titulo], i) =>
+              d.stackDetalle[clave]?.length ? (
+                <div
+                  key={clave}
+                  className="p-4 md:p-5 grid md:grid-cols-[160px_1fr] gap-1 md:gap-4"
+                  style={{ background: i % 2 ? t.surface2 : t.surface, borderTop: i ? `1px solid ${t.borderSoft}` : "none" }}
+                >
+                  <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.1em", color: t.accentText }} className="uppercase pt-0.5">
+                    {titulo}
+                  </span>
+                  <ul className="space-y-1.5">
+                    {d.stackDetalle[clave].map((item) => (
+                      <li key={item} className="text-sm leading-snug" style={{ color: t.muted }}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null
+            )}
+          </div>
+        </SeccionDetalle>
+
+        <SeccionDetalle t={t} etiqueta="Decisiones técnicas" titulo="Criterio detrás del código">
+          <div className="space-y-4">
+            {d.decisiones.map((dec) => (
+              <div key={dec.titulo} className="p-5 rounded-xl" style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}>
+                <h3 className="font-semibold text-sm mb-1.5" style={{ color: t.text }}>{dec.titulo}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: t.muted }}>{dec.texto}</p>
+              </div>
+            ))}
+          </div>
+        </SeccionDetalle>
+
+        <SeccionDetalle t={t} etiqueta="Resultado" titulo="Impacto del proyecto">
+          <p className="leading-relaxed text-[15px]" style={{ color: t.muted }}>{d.impacto}</p>
+        </SeccionDetalle>
+
+        <Reveal>
+          <div className="flex flex-wrap gap-3 pt-2">
+            <Boton t={t} primario icono={ExternalLink} href={d.demo}>Ver demo</Boton>
+            <Boton t={t} icono={FolderGit2} href={d.repo}>Código en GitHub</Boton>
+            <Boton t={t} icono={ArrowLeft} onClick={() => volver("proyectos")}>Más proyectos</Boton>
+          </div>
+        </Reveal>
+      </div>
+    </main>
+  );
+}
+
+/* ============================================================
+   CONTACTO Y FOOTER
+   ============================================================ */
+
+function Contacto({ t }) {
+  const canales = [
+    { icono: Mail, etiqueta: "Email", valor: DATOS.email, href: `mailto:${DATOS.email}` },
+    { icono: Github, etiqueta: "GitHub", valor: "Ver repositorios", href: DATOS.github },
+    { icono: Linkedin, etiqueta: "LinkedIn", valor: "Perfil profesional", href: DATOS.linkedin },
+  ];
+  return (
+    <section id="contacto" className="py-16 md:py-24 px-5 md:px-8">
+      <div className="max-w-5xl mx-auto">
+        <div
+          className="rounded-2xl p-8 md:p-12 text-center"
+          style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
+        >
+          <Reveal>
+            <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", color: t.accentText }}>CONTACTO</span>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mt-3 mb-3" style={{ color: t.text }}>
+              ¿Buscas un desarrollador junior que ya entrega en producción?
+            </h2>
+            <p className="max-w-xl mx-auto leading-relaxed mb-8" style={{ color: t.muted }}>
+              Estoy abierto a oportunidades de desarrollo web, automatización e IA. Respondo rápido y con gusto conversamos sobre cómo puedo aportar a tu equipo.
+            </p>
+          </Reveal>
+          <Reveal delay={100}>
+            <div className="flex flex-col sm:flex-row justify-center gap-3 mb-8">
+              {canales.map((c) => (
+                <a
+                  key={c.etiqueta}
+                  href={c.href}
+                  target={c.href.startsWith("http") ? "_blank" : undefined}
+                  rel="noreferrer"
+                  className="flex items-center gap-3 px-5 py-3.5 rounded-xl text-left transition-transform duration-200 hover:-translate-y-0.5"
+                  style={{ background: t.surface2, border: `1px solid ${t.borderSoft}` }}
+                >
+                  <c.icono size={17} style={{ color: t.accentText }} />
+                  <span>
+                    <span className="block text-xs" style={{ fontFamily: MONO, color: t.faint }}>{c.etiqueta}</span>
+                    <span className="block text-sm font-medium" style={{ color: t.text }}>{c.valor}</span>
+                  </span>
+                </a>
+              ))}
+            </div>
+            <Boton t={t} primario icono={Mail} href={`mailto:${DATOS.email}`}>Escríbeme ahora</Boton>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer({ t }) {
+  return (
+    <footer className="py-8 px-5 md:px-8" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
+      <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+        <span className="text-sm" style={{ color: t.faint }}>
+          © {new Date().getFullYear()} {DATOS.nombre} · Hecho con React y criterio.
+        </span>
+        <span className="inline-flex items-center gap-1.5" style={{ fontFamily: MONO, fontSize: 11, color: t.faint }}>
+          <MapPin size={12} /> {DATOS.ubicacion}
+        </span>
+      </div>
+    </footer>
+  );
+}
+
+/* ============================================================
+   APP
+   ============================================================ */
+
+export default function App() {
+  /* Tema: en este entorno la preferencia vive en memoria.
+     Al desplegar en producción, reemplaza la línea de useState por:
+
+       const [tema, setTema] = useState(() => {
+         try { return localStorage.getItem("tema") || "oscuro"; } catch { return "oscuro"; }
+       });
+
+     y dentro de alternarTema agrega:
+       try { localStorage.setItem("tema", nuevo); } catch {}
+  */
+  const [tema, setTema] = useState("oscuro");
+  const [vista, setVista] = useState({ pagina: "home" }); // {pagina:'home'} | {pagina:'proyecto', id}
+  const t = TEMAS[tema];
+
+  const alternarTema = () => setTema((prev) => (prev === "oscuro" ? "claro" : "oscuro"));
+
+  const irASeccion = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const abrirProyecto = (id) => {
+    setVista({ pagina: "proyecto", id });
+    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+  };
+
+  const volver = (seccion) => {
+    setVista({ pagina: "home" });
+    requestAnimationFrame(() => setTimeout(() => irASeccion(seccion || "proyectos"), 60));
+  };
+
+  const proyectoActivo = vista.pagina === "proyecto" ? DATOS.proyectos.find((p) => p.id === vista.id) : null;
+
+  return (
+    <div
+      style={{ background: t.bg, color: t.text, fontFamily: SANS, minHeight: "100vh", transition: "background 0.35s ease, color 0.35s ease" }}
+    >
+      <style>{`
+        html { scroll-behavior: smooth; }
+        @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto; }
+          *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+        ::selection { background: ${t.accent}; color: #14100A; }
+        a:focus-visible, button:focus-visible { outline: 2px solid ${t.accent}; outline-offset: 2px; border-radius: 6px; }
+      `}</style>
+
+      <Nav
+        t={t}
+        alternarTema={alternarTema}
+        irASeccion={irASeccion}
+        enDetalle={vista.pagina === "proyecto"}
+        volver={volver}
+      />
+
+      {proyectoActivo ? (
+        <PaginaProyecto t={t} proyecto={proyectoActivo} volver={volver} />
+      ) : (
+        <main>
+          <Hero t={t} irASeccion={irASeccion} />
+          <SobreMi t={t} />
+          <Tecnologias t={t} />
+          <Certificados t={t} />
+          <Proyectos t={t} abrir={abrirProyecto} />
+          <Contacto t={t} />
+        </main>
+      )}
+
+      <Footer t={t} />
+    </div>
+  );
+}
