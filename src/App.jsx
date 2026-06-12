@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   Github, Linkedin, Mail, Download, ArrowRight, ArrowLeft, ArrowUpRight,
   Moon, Sun, Menu, X, MapPin, CircleCheck, Layers, Database, Wrench,
-  Sparkles, Monitor, Award, ExternalLink, FolderGit2,
+  Sparkles, Monitor, Award, ExternalLink, FolderGit2, ArrowUp,
 } from "lucide-react";
 
 /* ============================================================
@@ -21,6 +21,14 @@ const DATOS = {
   github: "https://github.com/usuario",     // ← reemplazar
   linkedin: "https://linkedin.com/in/usuario", // ← reemplazar
   cvUrl: "#",                                // ← reemplazar con la ruta real del CV (ej. /cv-alexys-cavero.pdf)
+
+  /* FOTOS — placeholders de Unsplash (licencia libre).
+     Reemplázalas por tus fotos reales y capturas de tus proyectos.
+     Si una URL falla, el sitio muestra automáticamente un degradado. */
+  fotos: {
+    perfil: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=70",   // ← TU FOTO
+    sobreMi: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1100&q=70", // ← tu espacio de trabajo
+  },
 
   indicadores: [
     { valor: "4+", etiqueta: "proyectos en producción real" },
@@ -111,6 +119,7 @@ const DATOS = {
   certificados: [
     {
       codigo: "CERT-01",
+      imagen: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=70", // ← reemplazar con imagen real del certificado
       nombre: "Desarrollo Web Full Stack",
       institucion: "Institución de ejemplo",
       fecha: "2025",
@@ -118,6 +127,7 @@ const DATOS = {
     },
     {
       codigo: "CERT-02",
+      imagen: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=70", // ← reemplazar con imagen real del certificado
       nombre: "Bases de Datos con SQL Server",
       institucion: "Institución de ejemplo",
       fecha: "2025",
@@ -125,6 +135,7 @@ const DATOS = {
     },
     {
       codigo: "CERT-03",
+      imagen: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=70", // ← reemplazar con imagen real del certificado
       nombre: "Inteligencia Artificial Aplicada",
       institucion: "Institución de ejemplo",
       fecha: "2024",
@@ -132,6 +143,7 @@ const DATOS = {
     },
     {
       codigo: "CERT-04",
+      imagen: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=70", // ← reemplazar con imagen real del certificado
       nombre: "Scrum Foundation",
       institucion: "Institución de ejemplo",
       fecha: "2024",
@@ -153,6 +165,7 @@ const DATOS = {
       resultado: "Usada en una campaña real: centralizó inscripciones y dio identidad pública al proyecto.",
       stack: ["React", "Supabase", "Netlify", "Tailwind"],
       gradiente: ["#7F1D1D", "#B45309"],
+      imagen: "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=900&q=70", // ← reemplazar con captura real del proyecto
       detalle: {
         resumen:
           "Aplicación web para una campaña navideña de caridad: un muro estilo corcho donde los participantes dejan notas, más un flujo de registro de voluntarios. Diseñada, construida y desplegada en producción para una campaña real.",
@@ -195,6 +208,7 @@ const DATOS = {
       resultado: "Usada a diario en campo: ruta ordenada por cercanía, catálogo digital y carga de ventas desde Excel.",
       stack: ["JavaScript", "Leaflet", "Geolocalización", "Excel"],
       gradiente: ["#0C4A6E", "#0E7490"],
+      imagen: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=900&q=70", // ← reemplazar con captura real del proyecto
       detalle: {
         resumen:
           "Aplicación móvil (archivo único HTML, sin instalación) para un vendedor de lubricantes que cubre la ruta de Nazca: mapa con 286 clientes geocodificados, orden de visitas por GPS, catálogo de productos y seguimiento de avance diario.",
@@ -237,6 +251,7 @@ const DATOS = {
       resultado: "Proyecto entregado y facturado a cliente real; primer canal digital de captación de la academia.",
       stack: ["React", "Tailwind", "Netlify"],
       gradiente: ["#1E3A8A", "#3730A3"],
+      imagen: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=900&q=70", // ← reemplazar con captura real del proyecto
       detalle: {
         resumen:
           "Sitio institucional para una academia: oferta académica, horarios, docentes y canal de contacto directo. Uno de los primeros proyectos comerciales de Conecta Systems, entregado a un cliente real.",
@@ -279,6 +294,7 @@ const DATOS = {
       resultado: "Plataforma desplegada en Netlify con contenido estructurado por niveles y seguimiento de progreso.",
       stack: ["React", "Vite", "Tailwind"],
       gradiente: ["#14532D", "#15803D"],
+      imagen: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=70", // ← reemplazar con captura real del proyecto
       detalle: {
         resumen:
           "Plataforma de microaprendizaje para el área comercial de lubricantes: lecciones cortas sobre productos y técnicas de venta, con progreso persistente y evaluaciones por módulo.",
@@ -321,6 +337,7 @@ const DATOS = {
       resultado: "Sistema autónomo en producción: cada mañana genera y almacena un resumen de noticias sin intervención.",
       stack: ["React", "Netlify Functions", "Gemini API", "Netlify Blobs"],
       gradiente: ["#312E81", "#6D28D9"],
+      imagen: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=900&q=70", // ← reemplazar con captura real del proyecto
       detalle: {
         resumen:
           "Sistema operativo personal en el navegador: un dashboard que centraliza noticias tecnológicas generadas por IA, documentos descargables y herramientas propias. El módulo central es un pipeline autónomo de noticias con Gemini.",
@@ -363,6 +380,7 @@ const DATOS = {
       resultado: "Herramienta de uso real que ordena la información y reduce el análisis previo de horas a minutos.",
       stack: ["React", "Vite", "Visualización de datos"],
       gradiente: ["#7C2D12", "#A16207"],
+      imagen: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&w=900&q=70", // ← reemplazar con captura real del proyecto
       detalle: {
         resumen:
           "Aplicación web construida para un usuario real (un familiar aficionado a la hípica) que centraliza estadísticas de caballos, jinetes y resultados históricos para analizar carreras con datos en lugar de intuición.",
@@ -439,13 +457,15 @@ const SANS = 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-
    HOOKS Y UTILIDADES
    ============================================================ */
 
+const movReducido = () =>
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 // Revela elementos al entrar en viewport (respeta prefers-reduced-motion)
 function useReveal() {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) { setVisible(true); return; }
+    if (movReducido()) { setVisible(true); return; }
     const obs = new IntersectionObserver(
       ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
       { threshold: 0.12 }
@@ -465,12 +485,149 @@ function Reveal({ children, delay = 0, className = "", style = {} }) {
       style={{
         ...style,
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(18px)",
-        transition: `opacity 0.6s ease ${delay}ms, transform 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+        transform: visible ? "translateY(0)" : "translateY(22px)",
+        transition: `opacity 0.65s ease ${delay}ms, transform 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
       }}
     >
       {children}
     </div>
+  );
+}
+
+// Contador animado: "12+" → cuenta de 0 a 12 y conserva el sufijo
+function Contador({ valor, visible }) {
+  const m = String(valor).match(/^(\d+)(.*)$/);
+  const fin = m ? parseInt(m[1], 10) : 0;
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!visible) return;
+    if (movReducido() || !m) { setN(fin); return; }
+    let raf; const t0 = performance.now(); const dur = 1400;
+    const tick = (t) => {
+      const p = Math.min((t - t0) / dur, 1);
+      setN(Math.round(fin * (1 - Math.pow(1 - p, 3)))); // ease-out cúbico
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [visible, fin]);
+  if (!m) return <>{valor}</>;
+  return <>{n}{m[2]}</>;
+}
+
+/* Foto con degradado de respaldo: si la imagen no carga,
+   se muestra el degradado del proyecto en su lugar. */
+function Foto({ src, alt = "", gradiente = ["#1B232E", "#27313F"], className = "", style = {}, children }) {
+  const [falla, setFalla] = useState(false);
+  return (
+    <div
+      className={`relative overflow-hidden zoomable ${className}`}
+      style={{ background: `linear-gradient(135deg, ${gradiente[0]}, ${gradiente[1]})`, ...style }}
+    >
+      {!falla && src && (
+        <img
+          src={src} alt={alt} loading="lazy"
+          onError={() => setFalla(true)}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+      {children}
+    </div>
+  );
+}
+
+// Tarjeta con inclinación 3D y foco de luz que sigue al cursor
+function TiltCard({ children, className = "" }) {
+  const ref = useRef(null);
+  const onMove = (e) => {
+    if (movReducido() || !ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    ref.current.style.transform =
+      `perspective(900px) rotateX(${(0.5 - y) * 5}deg) rotateY(${(x - 0.5) * 5}deg) translateY(-4px)`;
+    ref.current.style.setProperty("--mx", `${x * 100}%`);
+    ref.current.style.setProperty("--my", `${y * 100}%`);
+  };
+  const onLeave = () => { if (ref.current) ref.current.style.transform = ""; };
+  return (
+    <div
+      ref={ref} onMouseMove={onMove} onMouseLeave={onLeave}
+      className={`h-full ${className}`}
+      style={{ transition: "transform 0.25s ease", willChange: "transform" }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// Barra de progreso de lectura (parte superior)
+function BarraProgreso({ t }) {
+  const [p, setP] = useState(0);
+  useEffect(() => {
+    const f = () => {
+      const h = document.documentElement;
+      setP(h.scrollTop / Math.max(h.scrollHeight - h.clientHeight, 1));
+    };
+    window.addEventListener("scroll", f, { passive: true });
+    f();
+    return () => window.removeEventListener("scroll", f);
+  }, []);
+  return (
+    <div
+      className="fixed top-0 left-0 h-0.5"
+      style={{ zIndex: 70, width: `${p * 100}%`, background: t.accent, transition: "width 0.1s linear" }}
+    />
+  );
+}
+
+// Botón flotante para volver arriba
+function VolverArriba({ t }) {
+  const [ver, setVer] = useState(false);
+  useEffect(() => {
+    const f = () => setVer(window.scrollY > 600);
+    window.addEventListener("scroll", f, { passive: true });
+    return () => window.removeEventListener("scroll", f);
+  }, []);
+  return (
+    <button
+      type="button"
+      aria-label="Volver arriba"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      className="fixed bottom-6 right-6 w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
+      style={{
+        zIndex: 60, background: t.accent, color: "#14100A",
+        boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+        opacity: ver ? 1 : 0, pointerEvents: ver ? "auto" : "none",
+        transform: ver ? "translateY(0)" : "translateY(16px)",
+      }}
+    >
+      <ArrowUp size={18} />
+    </button>
+  );
+}
+
+// Marquesina infinita de tecnologías
+function Marquesina({ t }) {
+  const items = DATOS.tecnologias.flatMap((c) => c.items.map((i) => i.nombre));
+  const doble = [...items, ...items];
+  const mascara = "linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent)";
+  return (
+    <Reveal>
+      <div
+        className="marquesina relative overflow-hidden py-3.5 mb-12 rounded-xl"
+        style={{ border: `1px solid ${t.borderSoft}`, background: t.surface, maskImage: mascara, WebkitMaskImage: mascara }}
+      >
+        <div className="pista flex items-center gap-10 w-max" style={{ animation: movReducido() ? "none" : "marquesina 30s linear infinite" }}>
+          {doble.map((nombre, i) => (
+            <span key={i} className="flex items-center gap-2.5 shrink-0" style={{ fontFamily: MONO, fontSize: 12.5, color: t.muted }}>
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: t.accent }} />
+              {nombre}
+            </span>
+          ))}
+        </div>
+      </div>
+    </Reveal>
   );
 }
 
@@ -498,15 +655,12 @@ function Chip({ t, children }) {
 }
 
 function Boton({ t, primario, icono: Icono, children, href, onClick, descarga }) {
-  const base = "inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all duration-200";
+  const base = "inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 hover:-translate-y-0.5";
+  const clase = primario ? base + " btn-brillo" : base;
   const estilo = primario
-    ? { background: t.accent, color: "#14100A", boxShadow: `0 1px 0 rgba(0,0,0,0.1)` }
+    ? { background: t.accent, color: "#14100A", boxShadow: "0 4px 14px rgba(232,152,62,0.25)" }
     : { background: "transparent", color: t.text, border: `1px solid ${t.border}` };
-  const props = {
-    className: base + " hover:-translate-y-0.5",
-    style: estilo,
-    onClick,
-  };
+  const props = { className: clase, style: estilo, onClick };
   if (href !== undefined) {
     return (
       <a href={href} {...props} {...(descarga ? { download: true } : {})} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
@@ -550,8 +704,9 @@ function Nav({ t, alternarTema, irASeccion, enDetalle, volver }) {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50"
+      className="fixed top-0 left-0 right-0"
       style={{
+        zIndex: 50,
         background: conFondo || abierto ? (t.nombre === "oscuro" ? "rgba(13,17,23,0.85)" : "rgba(247,246,242,0.85)") : "transparent",
         backdropFilter: conFondo || abierto ? "blur(12px)" : "none",
         borderBottom: `1px solid ${conFondo || abierto ? t.borderSoft : "transparent"}`,
@@ -559,9 +714,9 @@ function Nav({ t, alternarTema, irASeccion, enDetalle, volver }) {
       }}
     >
       <nav className="max-w-5xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
-        <button type="button" onClick={() => click("inicio")} className="flex items-center gap-2.5" style={{ color: t.text }}>
+        <button type="button" onClick={() => click("inicio")} className="group flex items-center gap-2.5" style={{ color: t.text }}>
           <span
-            className="w-7 h-7 rounded-md flex items-center justify-center font-bold text-sm"
+            className="w-7 h-7 rounded-md flex items-center justify-center font-bold text-sm transition-transform duration-300 group-hover:rotate-12"
             style={{ background: t.accent, color: "#14100A", fontFamily: MONO }}
           >
             A
@@ -575,7 +730,7 @@ function Nav({ t, alternarTema, irASeccion, enDetalle, volver }) {
               key={s.id}
               type="button"
               onClick={() => click(s.id)}
-              className="px-3 py-2 rounded-md text-sm transition-colors duration-200"
+              className="enlace-nav px-3 py-2 rounded-md text-sm transition-colors duration-200"
               style={{ color: t.muted }}
               onMouseEnter={(e) => (e.currentTarget.style.color = t.text)}
               onMouseLeave={(e) => (e.currentTarget.style.color = t.muted)}
@@ -587,7 +742,7 @@ function Nav({ t, alternarTema, irASeccion, enDetalle, volver }) {
             type="button"
             onClick={alternarTema}
             aria-label="Cambiar tema"
-            className="ml-2 w-9 h-9 rounded-lg flex items-center justify-center transition-colors"
+            className="ml-2 w-9 h-9 rounded-lg flex items-center justify-center transition-transform duration-300 hover:rotate-45"
             style={{ border: `1px solid ${t.border}`, color: t.muted }}
           >
             {t.nombre === "oscuro" ? <Sun size={15} /> : <Moon size={15} />}
@@ -636,76 +791,162 @@ function Nav({ t, alternarTema, irASeccion, enDetalle, volver }) {
 }
 
 /* ============================================================
-   HERO
+   HERO — con foto, orbes animados y contadores
    ============================================================ */
 
 function Hero({ t, irASeccion }) {
+  const [refStats, statsVisible] = useReveal();
+  const oscuro = t.nombre === "oscuro";
   return (
-    <section id="inicio" className="pt-32 md:pt-40 pb-16 md:pb-20 px-5 md:px-8">
-      <div className="max-w-5xl mx-auto">
-        <Reveal>
-          <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-7"
-            style={{ border: `1px solid ${t.border}`, background: t.surface }}
-          >
-            <span className="relative flex w-2 h-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: t.ok }} />
-              <span className="relative inline-flex rounded-full w-2 h-2" style={{ background: t.ok }} />
-            </span>
-            <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: t.muted }}>
-              {DATOS.disponible.toUpperCase()}
-            </span>
-          </div>
-        </Reveal>
+    <section id="inicio" className="relative overflow-hidden pt-32 md:pt-40 pb-16 md:pb-20 px-5 md:px-8">
+      {/* Fondo: cuadrícula técnica + orbes flotantes */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `linear-gradient(${oscuro ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)"} 1px, transparent 1px), linear-gradient(90deg, ${oscuro ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)"} 1px, transparent 1px)`,
+          backgroundSize: "44px 44px",
+          maskImage: "radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          top: -140, right: -100, width: 460, height: 460,
+          background: `radial-gradient(circle, ${oscuro ? "rgba(232,152,62,0.16)" : "rgba(180,83,9,0.12)"}, transparent 65%)`,
+          animation: movReducido() ? "none" : "flotar 9s ease-in-out infinite",
+        }}
+      />
+      <div
+        aria-hidden
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          bottom: -160, left: -120, width: 380, height: 380,
+          background: `radial-gradient(circle, ${oscuro ? "rgba(74,222,128,0.07)" : "rgba(21,128,61,0.07)"}, transparent 65%)`,
+          animation: movReducido() ? "none" : "flotar 12s ease-in-out infinite reverse",
+        }}
+      />
 
-        <Reveal delay={80}>
+      <div className="relative max-w-5xl mx-auto grid lg:grid-cols-5 gap-10 lg:gap-12 items-center">
+        {/* Columna de texto */}
+        <div className="lg:col-span-3">
+          <Reveal>
+            <div
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-7"
+              style={{ border: `1px solid ${t.border}`, background: t.surface }}
+            >
+              <span className="relative flex w-2 h-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: t.ok }} />
+                <span className="relative inline-flex rounded-full w-2 h-2" style={{ background: t.ok }} />
+              </span>
+              <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: t.muted }}>
+                {DATOS.disponible.toUpperCase()}
+              </span>
+            </div>
+          </Reveal>
+
           <h1
-            className="font-extrabold tracking-tight leading-[1.05] mb-5"
-            style={{ color: t.text, fontSize: "clamp(2.4rem, 6vw, 4.2rem)" }}
+            className="font-extrabold tracking-tight mb-5"
+            style={{ color: t.text, fontSize: "clamp(2.4rem, 6vw, 4.2rem)", lineHeight: 1.05 }}
           >
-            {DATOS.nombre}
-          </h1>
-        </Reveal>
-
-        <Reveal delay={140}>
-          <p style={{ fontFamily: MONO, fontSize: "clamp(0.78rem, 1.6vw, 0.95rem)", color: t.accentText, letterSpacing: "0.02em" }} className="mb-5">
-            {DATOS.titulo}
-          </p>
-        </Reveal>
-
-        <Reveal delay={200}>
-          <p className="text-base md:text-lg leading-relaxed max-w-2xl mb-9" style={{ color: t.muted }}>
-            {DATOS.descripcion}
-          </p>
-        </Reveal>
-
-        <Reveal delay={260}>
-          <div className="flex flex-wrap items-center gap-3 mb-12">
-            <Boton t={t} primario icono={Download} href={DATOS.cvUrl} descarga>Descargar CV</Boton>
-            <Boton t={t} icono={ArrowRight} onClick={() => irASeccion("proyectos")}>Ver proyectos</Boton>
-            <Boton t={t} icono={Github} href={DATOS.github}>GitHub</Boton>
-            <Boton t={t} icono={Linkedin} href={DATOS.linkedin}>LinkedIn</Boton>
-            <Boton t={t} icono={Mail} onClick={() => irASeccion("contacto")}>Contacto</Boton>
-          </div>
-        </Reveal>
-
-        <Reveal delay={320}>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-px rounded-xl overflow-hidden" style={{ background: t.borderSoft, border: `1px solid ${t.borderSoft}` }}>
-            {DATOS.indicadores.map((ind) => (
-              <div key={ind.etiqueta} className="p-5" style={{ background: t.surface }}>
-                <div className="text-2xl font-bold mb-1" style={{ color: t.text }}>{ind.valor}</div>
-                <div style={{ fontFamily: MONO, fontSize: 11, color: t.faint, letterSpacing: "0.04em" }}>{ind.etiqueta}</div>
-              </div>
+            {DATOS.nombre.split(" ").map((palabra, i) => (
+              <span key={i} className="palabra" style={{ animationDelay: `${180 + i * 140}ms` }}>
+                {palabra}{"\u00A0"}
+              </span>
             ))}
+          </h1>
+
+          <Reveal delay={140}>
+            <p style={{ fontFamily: MONO, fontSize: "clamp(0.78rem, 1.6vw, 0.95rem)", color: t.accentText, letterSpacing: "0.02em" }} className="mb-5">
+              {DATOS.titulo}
+            </p>
+          </Reveal>
+
+          <Reveal delay={200}>
+            <p className="text-base md:text-lg leading-relaxed max-w-2xl mb-9" style={{ color: t.muted }}>
+              {DATOS.descripcion}
+            </p>
+          </Reveal>
+
+          <Reveal delay={260}>
+            <div className="flex flex-wrap items-center gap-3">
+              <Boton t={t} primario icono={Download} href={DATOS.cvUrl} descarga>Descargar CV</Boton>
+              <Boton t={t} icono={ArrowRight} onClick={() => irASeccion("proyectos")}>Ver proyectos</Boton>
+              <Boton t={t} icono={Github} href={DATOS.github}>GitHub</Boton>
+              <Boton t={t} icono={Linkedin} href={DATOS.linkedin}>LinkedIn</Boton>
+              <Boton t={t} icono={Mail} onClick={() => irASeccion("contacto")}>Contacto</Boton>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Columna de foto — reemplaza DATOS.fotos.perfil por tu foto real */}
+        <Reveal delay={300} className="lg:col-span-2">
+          <div className="relative max-w-xs mx-auto lg:max-w-none">
+            <div
+              aria-hidden
+              className="absolute rounded-2xl"
+              style={{ inset: 0, transform: "translate(14px, 14px)", border: `2px solid ${t.accent}`, opacity: 0.55 }}
+            />
+            <Foto
+              src={DATOS.fotos.perfil}
+              alt={`Foto de ${DATOS.nombre}`}
+              gradiente={["#1B232E", "#3A2A14"]}
+              className="rounded-2xl"
+              style={{ aspectRatio: "4 / 5", boxShadow: "0 24px 60px rgba(0,0,0,0.3)" }}
+            >
+              <div
+                className="absolute inset-x-0 bottom-0 px-4 py-3"
+                style={{ background: "linear-gradient(transparent, rgba(0,0,0,0.65))" }}
+              >
+                <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.14em", color: "rgba(255,255,255,0.9)" }}>
+                  {DATOS.ubicacion.toUpperCase()} · CONECTA SYSTEMS
+                </span>
+              </div>
+            </Foto>
+            {/* Insignia flotante */}
+            <div
+              className="absolute flex items-center gap-2 px-3.5 py-2.5 rounded-xl"
+              style={{
+                bottom: -16, left: -16, background: t.surface, border: `1px solid ${t.border}`,
+                boxShadow: "0 12px 30px rgba(0,0,0,0.25)",
+                animation: movReducido() ? "none" : "flotar 6s ease-in-out infinite",
+              }}
+            >
+              <span className="w-2 h-2 rounded-full" style={{ background: t.ok }} />
+              <span style={{ fontFamily: MONO, fontSize: 11, color: t.text }}>4+ proyectos en producción</span>
+            </div>
           </div>
         </Reveal>
+      </div>
+
+      {/* Indicadores con contador animado */}
+      <div ref={refStats} className="relative max-w-5xl mx-auto mt-14">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-3 gap-px rounded-xl overflow-hidden"
+          style={{
+            background: t.borderSoft, border: `1px solid ${t.borderSoft}`,
+            opacity: statsVisible ? 1 : 0, transform: statsVisible ? "translateY(0)" : "translateY(22px)",
+            transition: "opacity 0.65s ease 120ms, transform 0.65s cubic-bezier(0.22,1,0.36,1) 120ms",
+          }}
+        >
+          {DATOS.indicadores.map((ind) => (
+            <div key={ind.etiqueta} className="p-5" style={{ background: t.surface }}>
+              <div className="text-2xl font-bold mb-1" style={{ color: t.text }}>
+                <Contador valor={ind.valor} visible={statsVisible} />
+              </div>
+              <div style={{ fontFamily: MONO, fontSize: 11, color: t.faint, letterSpacing: "0.04em" }}>{ind.etiqueta}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
 /* ============================================================
-   SOBRE MÍ
+   SOBRE MÍ — con foto de espacio de trabajo
    ============================================================ */
 
 function SobreMi({ t }) {
@@ -717,25 +958,59 @@ function SobreMi({ t }) {
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4" style={{ color: t.text }}>
             Software con propósito, no proyectos de práctica
           </h2>
-          <p className="max-w-2xl leading-relaxed mb-10" style={{ color: t.muted }}>
-            {DATOS.sobreMi.intro}
-          </p>
         </Reveal>
-        <div className="grid sm:grid-cols-2 gap-4">
-          {DATOS.sobreMi.puntos.map((p, i) => (
-            <Reveal key={p.titulo} delay={i * 70}>
+
+        <div className="grid lg:grid-cols-5 gap-8 items-start mt-8">
+          {/* Foto — reemplaza DATOS.fotos.sobreMi por una foto tuya trabajando */}
+          <Reveal delay={80} className="lg:col-span-2">
+            <div className="relative">
               <div
-                className="h-full p-5 rounded-xl transition-transform duration-200 hover:-translate-y-0.5"
-                style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
+                aria-hidden
+                className="absolute rounded-xl"
+                style={{ inset: 0, transform: "translate(-12px, 12px)", background: t.accentSoft }}
+              />
+              <Foto
+                src={DATOS.fotos.sobreMi}
+                alt="Espacio de trabajo"
+                gradiente={["#16202C", "#26190B"]}
+                className="rounded-xl"
+                style={{ aspectRatio: "4 / 3", border: `1px solid ${t.borderSoft}` }}
               >
-                <div className="flex items-center gap-2 mb-2">
-                  <CircleCheck size={15} style={{ color: t.accentText }} />
-                  <h3 className="font-semibold text-sm" style={{ color: t.text }}>{p.titulo}</h3>
+                <div
+                  className="absolute inset-x-0 bottom-0 px-4 py-2.5"
+                  style={{ background: "linear-gradient(transparent, rgba(0,0,0,0.6))" }}
+                >
+                  <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.12em", color: "rgba(255,255,255,0.88)" }}>
+                    // CÓDIGO QUE LLEGA A PRODUCCIÓN
+                  </span>
                 </div>
-                <p className="text-sm leading-relaxed" style={{ color: t.muted }}>{p.texto}</p>
-              </div>
+              </Foto>
+            </div>
+          </Reveal>
+
+          <div className="lg:col-span-3">
+            <Reveal delay={120}>
+              <p className="leading-relaxed mb-7" style={{ color: t.muted }}>
+                {DATOS.sobreMi.intro}
+              </p>
             </Reveal>
-          ))}
+            <div className="grid sm:grid-cols-2 gap-4">
+              {DATOS.sobreMi.puntos.map((p, i) => (
+                <Reveal key={p.titulo} delay={160 + i * 70}>
+                  <div
+                    className="h-full p-5 rounded-xl transition-all duration-200 hover:-translate-y-1"
+                    style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <CircleCheck size={15} style={{ color: t.accentText }} />
+                      <h3 className="font-semibold text-sm" style={{ color: t.text }}>{p.titulo}</h3>
+                    </div>
+                    <p className="text-sm leading-relaxed" style={{ color: t.muted }}>{p.texto}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -743,7 +1018,7 @@ function SobreMi({ t }) {
 }
 
 /* ============================================================
-   TECNOLOGÍAS
+   TECNOLOGÍAS — con marquesina animada
    ============================================================ */
 
 const ICONOS_CAT = { monitor: Monitor, layers: Layers, database: Database, wrench: Wrench, sparkles: Sparkles };
@@ -761,30 +1036,38 @@ function Tecnologias({ t }) {
             Cada tecnología de esta lista está en uso real en mis proyectos. No es una colección de logos: es el stack con el que entrego software.
           </p>
         </Reveal>
+
+        <Marquesina t={t} />
+
         <div className="grid md:grid-cols-2 gap-4">
           {DATOS.tecnologias.map((cat, i) => {
             const Icono = ICONOS_CAT[cat.icono] || Layers;
             return (
               <Reveal key={cat.categoria} delay={i * 60} className={i === DATOS.tecnologias.length - 1 ? "md:col-span-2" : ""}>
-                <div className="h-full p-5 md:p-6 rounded-xl" style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}>
-                  <div className="flex items-center gap-3 mb-1.5">
-                    <span className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: t.accentSoft, color: t.accentText }}>
-                      <Icono size={16} />
-                    </span>
-                    <h3 className="font-semibold" style={{ color: t.text }}>{cat.categoria}</h3>
-                  </div>
-                  <p className="text-sm mb-4" style={{ color: t.faint }}>{cat.descripcion}</p>
-                  <div className="space-y-3">
-                    {cat.items.map((item) => (
-                      <div key={item.nombre} className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-3">
-                        <span className="shrink-0 sm:w-44" style={{ fontFamily: MONO, fontSize: 12.5, color: t.text }}>
-                          {item.nombre}
+                <TiltCard>
+                  <div className="group relative h-full p-5 md:p-6 rounded-xl overflow-hidden" style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}>
+                    <div className="foco absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="relative">
+                      <div className="flex items-center gap-3 mb-1.5">
+                        <span className="w-8 h-8 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style={{ background: t.accentSoft, color: t.accentText }}>
+                          <Icono size={16} />
                         </span>
-                        <span className="text-sm leading-snug" style={{ color: t.muted }}>{item.detalle}</span>
+                        <h3 className="font-semibold" style={{ color: t.text }}>{cat.categoria}</h3>
                       </div>
-                    ))}
+                      <p className="text-sm mb-4" style={{ color: t.faint }}>{cat.descripcion}</p>
+                      <div className="space-y-3">
+                        {cat.items.map((item) => (
+                          <div key={item.nombre} className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-3">
+                            <span className="shrink-0 sm:w-44" style={{ fontFamily: MONO, fontSize: 12.5, color: t.text }}>
+                              {item.nombre}
+                            </span>
+                            <span className="text-sm leading-snug" style={{ color: t.muted }}>{item.detalle}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </TiltCard>
               </Reveal>
             );
           })}
@@ -795,7 +1078,7 @@ function Tecnologias({ t }) {
 }
 
 /* ============================================================
-   CERTIFICADOS
+   CERTIFICADOS — con imagen y modal ampliable
    ============================================================ */
 
 function Certificados({ t }) {
@@ -812,32 +1095,31 @@ function Certificados({ t }) {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {DATOS.certificados.map((c, i) => (
             <Reveal key={c.codigo} delay={i * 60}>
-              <button
-                type="button"
-                onClick={() => setActivo(c)}
-                className="w-full h-full text-left rounded-xl overflow-hidden transition-transform duration-200 hover:-translate-y-1"
-                style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
-              >
-                {/* Área de imagen del certificado (placeholder) */}
-                <div
-                  className="h-28 flex items-center justify-center"
-                  style={{ background: t.surface2, borderBottom: `1px solid ${t.borderSoft}` }}
+              <TiltCard>
+                <button
+                  type="button"
+                  onClick={() => setActivo(c)}
+                  className="group w-full h-full text-left rounded-xl overflow-hidden transition-all duration-200"
+                  style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
                 >
-                  <div className="flex flex-col items-center gap-1.5" style={{ color: t.faint }}>
-                    <Award size={22} style={{ color: t.accentText }} />
-                    <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em" }}>{c.codigo}</span>
+                  <Foto src={c.imagen} alt={c.nombre} gradiente={["#1C2430", "#2A1F10"]} className="h-28" style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(transparent 30%, rgba(0,0,0,0.55))" }} />
+                    <div className="absolute bottom-2 left-3 flex items-center gap-2">
+                      <Award size={15} style={{ color: "#F3B566" }} />
+                      <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em", color: "rgba(255,255,255,0.92)" }}>{c.codigo}</span>
+                    </div>
+                  </Foto>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-sm mb-1 leading-snug" style={{ color: t.text }}>{c.nombre}</h3>
+                    <p style={{ fontFamily: MONO, fontSize: 11, color: t.faint }} className="mb-2">
+                      {c.institucion} · {c.fecha}
+                    </p>
+                    <span className="text-xs font-medium inline-flex items-center gap-1 transition-transform duration-200 group-hover:translate-x-0.5" style={{ color: t.accentText }}>
+                      Ver detalle <ArrowUpRight size={12} />
+                    </span>
                   </div>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-sm mb-1 leading-snug" style={{ color: t.text }}>{c.nombre}</h3>
-                  <p style={{ fontFamily: MONO, fontSize: 11, color: t.faint }} className="mb-2">
-                    {c.institucion} · {c.fecha}
-                  </p>
-                  <span className="text-xs font-medium inline-flex items-center gap-1" style={{ color: t.accentText }}>
-                    Ver detalle <ArrowUpRight size={12} />
-                  </span>
-                </div>
-              </button>
+                </button>
+              </TiltCard>
             </Reveal>
           ))}
         </div>
@@ -846,23 +1128,24 @@ function Certificados({ t }) {
       {/* Modal de certificado */}
       {activo && (
         <div
-          className="fixed inset-0 z-[60] flex items-center justify-center p-5"
-          style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
+          className="fixed inset-0 flex items-center justify-center p-5"
+          style={{ zIndex: 60, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
           onClick={() => setActivo(null)}
         >
           <div
-            className="w-full max-w-md rounded-2xl overflow-hidden"
+            className="w-full max-w-md rounded-2xl overflow-hidden modal-entrada"
             style={{ background: t.surface, border: `1px solid ${t.border}` }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="h-44 flex items-center justify-center" style={{ background: t.surface2 }}>
-              <div className="flex flex-col items-center gap-2" style={{ color: t.faint }}>
-                <Award size={36} style={{ color: t.accentText }} />
-                <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em" }}>
-                  IMAGEN DEL CERTIFICADO · {activo.codigo}
+            <Foto src={activo.imagen} alt={activo.nombre} gradiente={["#1C2430", "#2A1F10"]} className="h-48">
+              <div className="absolute inset-0" style={{ background: "linear-gradient(transparent 40%, rgba(0,0,0,0.6))" }} />
+              <div className="absolute bottom-3 left-4 flex items-center gap-2">
+                <Award size={18} style={{ color: "#F3B566" }} />
+                <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", color: "rgba(255,255,255,0.92)" }}>
+                  {activo.codigo} · IMAGEN DEL CERTIFICADO
                 </span>
               </div>
-            </div>
+            </Foto>
             <div className="p-6">
               <h3 className="font-bold text-lg mb-1" style={{ color: t.text }}>{activo.nombre}</h3>
               <p style={{ fontFamily: MONO, fontSize: 12, color: t.accentText }} className="mb-3">
@@ -884,25 +1167,31 @@ function Certificados({ t }) {
 
 function MiniaturaProyecto({ t, p, alta }) {
   return (
-    <div
-      className={`relative overflow-hidden flex items-end ${alta ? "h-44 md:h-56" : "h-36"}`}
-      style={{ background: `linear-gradient(135deg, ${p.gradiente[0]}, ${p.gradiente[1]})` }}
+    <Foto
+      src={p.imagen}
+      alt={p.nombre}
+      gradiente={p.gradiente}
+      className={`flex items-end ${alta ? "h-48 md:h-64" : "h-40"}`}
     >
-      {/* Cuadrícula técnica de fondo */}
+      {/* Velo de marca sobre la foto */}
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0"
+        style={{ background: `linear-gradient(150deg, ${p.gradiente[0]}CC 0%, ${p.gradiente[1]}55 55%, transparent 100%)` }}
+      />
+      <div
+        className="absolute inset-0 opacity-15"
         style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.18) 1px, transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)",
           backgroundSize: "26px 26px",
         }}
       />
       <span
         className="relative m-3 px-2 py-1 rounded"
-        style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", color: "rgba(255,255,255,0.92)", background: "rgba(0,0,0,0.35)" }}
+        style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", color: "rgba(255,255,255,0.94)", background: "rgba(0,0,0,0.4)" }}
       >
         {p.codigo} · {CATEGORIAS.find((c) => c.id === p.categoria)?.titulo.toUpperCase()}
       </span>
-    </div>
+    </Foto>
   );
 }
 
@@ -919,31 +1208,34 @@ function FilaDato({ t, etiqueta, children }) {
 
 function TarjetaProyecto({ t, p, abrir, delay }) {
   return (
-    <Reveal delay={delay}>
-      <button
-        type="button"
-        onClick={() => abrir(p.id)}
-        className="group w-full h-full text-left rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-1"
-        style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
-        onMouseEnter={(e) => (e.currentTarget.style.borderColor = t.accent)}
-        onMouseLeave={(e) => (e.currentTarget.style.borderColor = t.borderSoft)}
-      >
-        <MiniaturaProyecto t={t} p={p} />
-        <div className="p-5">
-          <h3 className="font-bold text-base mb-1.5" style={{ color: t.text }}>{p.nombre}</h3>
-          <p className="text-sm leading-relaxed mb-4" style={{ color: t.muted }}>{p.corto}</p>
-          <div className="space-y-2.5 mb-4 pb-4" style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
-            <FilaDato t={t} etiqueta="PROBLEMA">{p.problema}</FilaDato>
-            <FilaDato t={t} etiqueta="RESULTADO">{p.resultado}</FilaDato>
+    <Reveal delay={delay} className="h-full">
+      <TiltCard>
+        <button
+          type="button"
+          onClick={() => abrir(p.id)}
+          className="group relative w-full h-full text-left rounded-xl overflow-hidden transition-all duration-200"
+          style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
+          onMouseEnter={(e) => (e.currentTarget.style.borderColor = t.accent)}
+          onMouseLeave={(e) => (e.currentTarget.style.borderColor = t.borderSoft)}
+        >
+          <div className="foco absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ zIndex: 2 }} />
+          <MiniaturaProyecto t={t} p={p} />
+          <div className="p-5">
+            <h3 className="font-bold text-base mb-1.5" style={{ color: t.text }}>{p.nombre}</h3>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: t.muted }}>{p.corto}</p>
+            <div className="space-y-2.5 mb-4 pb-4" style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
+              <FilaDato t={t} etiqueta="PROBLEMA">{p.problema}</FilaDato>
+              <FilaDato t={t} etiqueta="RESULTADO">{p.resultado}</FilaDato>
+            </div>
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {p.stack.map((s) => <Chip key={s} t={t}>{s}</Chip>)}
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-sm font-medium transition-transform duration-200 group-hover:translate-x-1" style={{ color: t.accentText }}>
+              Ver caso completo <ArrowRight size={15} />
+            </span>
           </div>
-          <div className="flex flex-wrap gap-1.5 mb-4">
-            {p.stack.map((s) => <Chip key={s} t={t}>{s}</Chip>)}
-          </div>
-          <span className="inline-flex items-center gap-1.5 text-sm font-medium transition-transform duration-200 group-hover:translate-x-0.5" style={{ color: t.accentText }}>
-            Ver caso completo <ArrowRight size={15} />
-          </span>
-        </div>
-      </button>
+        </button>
+      </TiltCard>
     </Reveal>
   );
 }
@@ -1017,7 +1309,7 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
           <button
             type="button"
             onClick={() => volver("proyectos")}
-            className="inline-flex items-center gap-2 text-sm font-medium mb-8 transition-transform duration-200 hover:-translate-x-0.5"
+            className="inline-flex items-center gap-2 text-sm font-medium mb-8 transition-transform duration-200 hover:-translate-x-1"
             style={{ color: t.muted }}
           >
             <ArrowLeft size={15} /> Volver a proyectos
@@ -1025,7 +1317,7 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
         </Reveal>
 
         <Reveal delay={60}>
-          <div className="rounded-xl overflow-hidden mb-8" style={{ border: `1px solid ${t.borderSoft}` }}>
+          <div className="rounded-xl overflow-hidden mb-8" style={{ border: `1px solid ${t.borderSoft}`, boxShadow: "0 20px 50px rgba(0,0,0,0.2)" }}>
             <MiniaturaProyecto t={t} p={p} alta />
           </div>
         </Reveal>
@@ -1044,19 +1336,19 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
         </Reveal>
 
         <SeccionDetalle t={t} etiqueta="Resumen ejecutivo">
-          <p className="leading-relaxed text-[15px]" style={{ color: t.muted }}>{d.resumen}</p>
+          <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15 }}>{d.resumen}</p>
         </SeccionDetalle>
 
         <SeccionDetalle t={t} etiqueta="Problema" titulo="¿Qué necesidad existía?">
-          <p className="leading-relaxed text-[15px]" style={{ color: t.muted }}>{d.problemaLargo}</p>
+          <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15 }}>{d.problemaLargo}</p>
         </SeccionDetalle>
 
         <SeccionDetalle t={t} etiqueta="Solución" titulo="¿Cómo se resolvió?">
-          <p className="leading-relaxed text-[15px]" style={{ color: t.muted }}>{d.solucion}</p>
+          <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15 }}>{d.solucion}</p>
         </SeccionDetalle>
 
         <SeccionDetalle t={t} etiqueta="Arquitectura" titulo="Enfoque técnico">
-          <p className="leading-relaxed text-[15px]" style={{ color: t.muted }}>{d.arquitectura}</p>
+          <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15 }}>{d.arquitectura}</p>
         </SeccionDetalle>
 
         <SeccionDetalle t={t} etiqueta="Stack tecnológico">
@@ -1065,13 +1357,13 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
               d.stackDetalle[clave]?.length ? (
                 <div
                   key={clave}
-                  className="p-4 md:p-5 grid md:grid-cols-[160px_1fr] gap-1 md:gap-4"
+                  className="p-4 md:p-5 grid md:grid-cols-3 gap-1 md:gap-4"
                   style={{ background: i % 2 ? t.surface2 : t.surface, borderTop: i ? `1px solid ${t.borderSoft}` : "none" }}
                 >
                   <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.1em", color: t.accentText }} className="uppercase pt-0.5">
                     {titulo}
                   </span>
-                  <ul className="space-y-1.5">
+                  <ul className="space-y-1.5 md:col-span-2">
                     {d.stackDetalle[clave].map((item) => (
                       <li key={item} className="text-sm leading-snug" style={{ color: t.muted }}>{item}</li>
                     ))}
@@ -1085,7 +1377,7 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
         <SeccionDetalle t={t} etiqueta="Decisiones técnicas" titulo="Criterio detrás del código">
           <div className="space-y-4">
             {d.decisiones.map((dec) => (
-              <div key={dec.titulo} className="p-5 rounded-xl" style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}>
+              <div key={dec.titulo} className="p-5 rounded-xl transition-transform duration-200 hover:-translate-y-0.5" style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}>
                 <h3 className="font-semibold text-sm mb-1.5" style={{ color: t.text }}>{dec.titulo}</h3>
                 <p className="text-sm leading-relaxed" style={{ color: t.muted }}>{dec.texto}</p>
               </div>
@@ -1094,7 +1386,7 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
         </SeccionDetalle>
 
         <SeccionDetalle t={t} etiqueta="Resultado" titulo="Impacto del proyecto">
-          <p className="leading-relaxed text-[15px]" style={{ color: t.muted }}>{d.impacto}</p>
+          <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15 }}>{d.impacto}</p>
         </SeccionDetalle>
 
         <Reveal>
@@ -1119,13 +1411,23 @@ function Contacto({ t }) {
     { icono: Github, etiqueta: "GitHub", valor: "Ver repositorios", href: DATOS.github },
     { icono: Linkedin, etiqueta: "LinkedIn", valor: "Perfil profesional", href: DATOS.linkedin },
   ];
+  const oscuro = t.nombre === "oscuro";
   return (
     <section id="contacto" className="py-16 md:py-24 px-5 md:px-8">
       <div className="max-w-5xl mx-auto">
         <div
-          className="rounded-2xl p-8 md:p-12 text-center"
+          className="relative overflow-hidden rounded-2xl p-8 md:p-12 text-center"
           style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
         >
+          <div
+            aria-hidden
+            className="absolute pointer-events-none rounded-full"
+            style={{
+              top: -120, left: "50%", marginLeft: -200, width: 400, height: 240,
+              background: `radial-gradient(ellipse, ${oscuro ? "rgba(232,152,62,0.12)" : "rgba(180,83,9,0.09)"}, transparent 70%)`,
+              animation: movReducido() ? "none" : "flotar 10s ease-in-out infinite",
+            }}
+          />
           <Reveal>
             <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", color: t.accentText }}>CONTACTO</span>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mt-3 mb-3" style={{ color: t.text }}>
@@ -1136,14 +1438,14 @@ function Contacto({ t }) {
             </p>
           </Reveal>
           <Reveal delay={100}>
-            <div className="flex flex-col sm:flex-row justify-center gap-3 mb-8">
+            <div className="relative flex flex-col sm:flex-row justify-center gap-3 mb-8">
               {canales.map((c) => (
                 <a
                   key={c.etiqueta}
                   href={c.href}
                   target={c.href.startsWith("http") ? "_blank" : undefined}
                   rel="noreferrer"
-                  className="flex items-center gap-3 px-5 py-3.5 rounded-xl text-left transition-transform duration-200 hover:-translate-y-0.5"
+                  className="flex items-center gap-3 px-5 py-3.5 rounded-xl text-left transition-all duration-200 hover:-translate-y-1"
                   style={{ background: t.surface2, border: `1px solid ${t.borderSoft}` }}
                 >
                   <c.icono size={17} style={{ color: t.accentText }} />
@@ -1205,7 +1507,7 @@ export default function App() {
 
   const abrirProyecto = (id) => {
     setVista({ pagina: "proyecto", id });
-    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+    window.scrollTo({ top: 0 });
   };
 
   const volver = (seccion) => {
@@ -1221,6 +1523,23 @@ export default function App() {
     >
       <style>{`
         html { scroll-behavior: smooth; }
+        @keyframes flotar { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(10px, -16px); } }
+        @keyframes marquesina { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes aparecerPalabra { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes modalEntrada { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .palabra { display: inline-block; animation: aparecerPalabra 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .modal-entrada { animation: modalEntrada 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .marquesina:hover .pista { animation-play-state: paused; }
+        .btn-brillo { position: relative; overflow: hidden; }
+        .btn-brillo::after {
+          content: ""; position: absolute; top: 0; left: -130%; width: 55%; height: 100%;
+          background: linear-gradient(105deg, transparent, rgba(255,255,255,0.5), transparent);
+          transform: skewX(-18deg); transition: left 0.55s ease;
+        }
+        .btn-brillo:hover::after { left: 150%; }
+        .zoomable img { transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+        .group:hover .zoomable img, .zoomable:hover img { transform: scale(1.07); }
+        .foco { background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), ${t.accentSoft}, transparent 65%); }
         @media (prefers-reduced-motion: reduce) {
           html { scroll-behavior: auto; }
           *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -1228,6 +1547,8 @@ export default function App() {
         ::selection { background: ${t.accent}; color: #14100A; }
         a:focus-visible, button:focus-visible { outline: 2px solid ${t.accent}; outline-offset: 2px; border-radius: 6px; }
       `}</style>
+
+      <BarraProgreso t={t} />
 
       <Nav
         t={t}
@@ -1251,6 +1572,7 @@ export default function App() {
       )}
 
       <Footer t={t} />
+      <VolverArriba t={t} />
     </div>
   );
 }
